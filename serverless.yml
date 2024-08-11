@@ -1,0 +1,18 @@
+service: serverless-http-api-typescript
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+
+functions:
+  device:
+    handler: src/functions/handler.handler
+    events:
+      - httpApi:
+          path: /{proxy+}
+          method: ANY
+
+plugins:
+  - serverless-plugin-typescript
+  - serverless-offline

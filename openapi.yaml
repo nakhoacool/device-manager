@@ -1,0 +1,194 @@
+openapi: 3.0.0
+info:
+  title: Device API
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000
+    variables: {}
+paths:
+  /devices:
+    get:
+      summary: List all devices
+      responses:
+        '200':
+          description: A list of devices
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    props:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          format: uuidv4
+                        name:
+                          type: string
+                        status:
+                          type: string
+              example:
+                - props:
+                    id: "d47b0678-71b2-4cb9-af13-c05ba8257f87"
+                    name: "Device 1"
+                    status: "ON"
+                - props:
+                    id: "94bb4f1c-adef-4a31-9ab5-5617941e5825"
+                    name: "Device 2"
+                    status: "OFF"
+    post:
+      summary: Create a new device
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                status:
+                  type: string
+                  enum: ['ON', 'OFF', 'UNKNOWN']
+            example:
+              name: "Device 1"
+              status: "ON"      
+      responses:
+        '200':
+          description: Device created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  props:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        format: uuidv4
+                        description: Randomly generated UUID V4
+                      name:
+                        type: string
+                      status:
+                        type: string
+              example:
+                props:
+                  id: "d47b0678-71b2-4cb9-af13-c05ba8257f87"
+                  name: "Device 1"
+                  status: "ON"
+  /devices/{id}:
+    get:
+      summary: Get a specific device
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            format: uuidv4
+            description: The device ID
+            example: "55186d8d-15f8-4e48-8714-6c01e4ab3574"
+      responses:
+        '200':
+          description: Device details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  props:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        format: uuidv4
+                      name:
+                        type: string
+                      status:
+                        type: string
+              example:
+                props:
+                  id: "d47b0678-71b2-4cb9-af13-c05ba8257f87"
+                  name: "Device 1"
+                  status: "ON"
+    put:
+      summary: Update a specific device
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            format: uuidv4
+            description: The device ID
+            example: "b3dae4ab-de45-47a9-8a45-20ad877a7be6"
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  nullable: true
+                status:
+                  type: string
+                  enum: ['ON', 'OFF', 'UNKNOWN']
+                  nullable: true
+            example:
+              name: "Device 1 updated"
+              status: "OFF"
+      responses:
+        '200':
+          description: Device updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  props:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        format: uuidv4
+                      name:
+                        type: string
+                      status:
+                        type: string
+              examples:
+                initial:
+                  value:
+                    props:
+                      id: "b3dae4ab-de45-47a9-8a45-20ad877a7be6"
+                      name: "Device 1"
+                      status: "ON"
+                updated:
+                  value:
+                    props:
+                      id: "b3dae4ab-de45-47a9-8a45-20ad877a7be6"
+                      name: "Device 1 updated"
+                      status: "OFF"
+    delete:
+      summary: Delete a specific device
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            format: uuidv4
+            description: The device ID
+            example: "55186d8d-15f8-4e48-8714-6c01e4ab3574"
+      responses:
+        '204':
+          description: Device deleted
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: "Device with id 55186d8d-15f8-4e48-8714-6c01e4ab3574 has been deleted"
